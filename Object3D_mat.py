@@ -88,7 +88,7 @@ class Object3D:
 
         return local_vertex
 
-    def world_to_view(self, world_vertex, camera) -> pygame.Vector3:
+    def world_to_view(self, world_vertex, camera) -> numpy.array:
         """
         Transforms the given world-space vertex to view space,
         by translating and rotating the object according to the
