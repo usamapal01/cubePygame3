@@ -12,9 +12,9 @@ import numpy
 
 class Object3D:
     def __init__(self, mesh: Mesh3D,
-                 position: pygame.Vector3 = pygame.Vector3(0.0, 0.0, 0.0),
-                 orientation: pygame.Vector3 = pygame.Vector3(0.0, 0.0, 0.0),
-                 scale: pygame.Vector3 = pygame.Vector3(1.0, 1.0, 1.0),):
+                 position: numpy.array = numpy.array([0.0, 0.0, 0.0]),
+                 orientation: numpy.array = numpy.array([0.0, 0.0, 0.0]),
+                 scale: numpy.array = numpy.array([0.5, 0.5, 0.5])):
         self.mesh = mesh
         self.position = position
         self.orientation = orientation
@@ -112,9 +112,6 @@ class Object3D:
         self.model_matrix = numpy.matmul(translated_mat, numpy.matmul(roll_mat, numpy.matmul(
             pitch_mat, numpy.matmul(yaw_mat, scale_mat))))
 
-        # # rotate
-        # self.model_matrix = numpy.matmul(translated_matrix, numpy.matmul(a_roll, numpy.matmul(
-        #     a_pitch, numpy.matmul(a_yaw, scale_matrix))))
 
     def local_to_world(self, local_vertex: numpy.array, model_matrix) -> numpy.array:
         """
@@ -200,15 +197,8 @@ class Object3D:
 
     def draw(self, surface: pygame.Surface, model_matrix, view_matrix, projection_matrix):
         projected = []
-        # self.model_matrix_update()
-        # self.view_matrix_update(camera)
-        # self.projection_matrix_update(frustum)
+
         for v_local in self.mesh.vertices:
-            # v_world = self.local_to_world(v_local)
-            # v_view = self.world_to_view(v_world)
-            # v_clip = self.view_to_clip(v_view, frustum)
-            # v_screen = self.clip_to_screen(v_clip, surface)
-            # projected.append(v_screen)
             v_world = self.local_to_world(v_local, model_matrix)
             v_view = self.world_to_view(v_world, view_matrix)
             v_clip = self.view_to_clip(v_view, projection_matrix)
