@@ -12,9 +12,9 @@ import numpy
 
 class Object3D:
     def __init__(self, mesh: Mesh3D,
-                 position: pygame.Vector3 = pygame.Vector3(0.0, 0.0, 0.0),
-                 orientation: pygame.Vector3 = pygame.Vector3(0.0, 0.0, 0.0),
-                 scale: pygame.Vector3 = pygame.Vector3(1.0, 1.0, 1.0)):
+                 position: numpy.array = numpy.array([0.0, 0.0, 0.0]),
+                 orientation: numpy.array = numpy.array([0.0, 0.0, 0.0]),
+                 scale: numpy.array = numpy.array([1.0, 1.0, 1.0])):
         self.mesh = mesh
         self.position = position
         self.orientation = orientation

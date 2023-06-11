@@ -1,20 +1,16 @@
 import pygame
 from Mesh3D import Mesh3D
 import math
-# from Object3D_mat import Object3D
 from Object3D_mat import Object3D
 import numpy as np
 
 
-######
 # REQUIREMENTS:
 # make a file "primitives.py", and copy all your draw_line, draw_triangle, and fill_triangle code there.
 # copy the Mesh3D file from the last lesson.
 
-
 def make_cube():
     return Object3D(Mesh3D.cube())
-
 
 if __name__ == "__main__":
     pygame.init()
@@ -23,8 +19,8 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((screen_width, screen_height))
     done = False
     m = make_cube()
-    m.position = pygame.Vector3(0, 0, -2)
-    # m.position = np.array([0, 0, -2])
+    # m.position = pygame.Vector3(0, 0, -2)
+    m.position = np.array([0, 0, -2])
 
     # Given the vertical half-FOV, compute coordinates of the perspective frustum.
     v_fov = 30
@@ -46,17 +42,17 @@ if __name__ == "__main__":
     # static_orientation = m.orientation
     # static_position = m.position
     # static_scale = m.scale
-    camera = (1, 3, -2, 1, 3, -5, 0, 1, 0)
+    camera = np.array([1, 3, -2, 1, 3, -5, 0, 1, 0])
 
     m.model_matrix_update()
     m.view_matrix_update(camera)
     m.projection_matrix_update(frustum)
 
-    prev_orientation = pygame.Vector3(*m.orientation)
-    prev_scale = pygame.Vector3(*m.scale)
-    prev_position = pygame.Vector3(*m.position)
-    prev_camera = pygame.Vector3(*camera[:3])
-    prev_frustum = frustum[:6]
+    prev_orientation = np.array(m.orientation)
+    prev_scale = np.array(m.scale)
+    prev_position = np.array(m.position)
+    prev_camera = np.array(camera[:3])
+    prev_frustum = np.array(frustum[:6])
 
     while not done:
         screen.fill(black)
@@ -64,24 +60,28 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 done = True
 
-        # Checking if the cube has been moved, scaled, or turned
-        if (prev_orientation != m.orientation) or (prev_position != m.position) or (prev_scale != m.scale):
+        # If cube changed position, orientation or scaled
+        if (
+                not np.array_equal(prev_orientation, m.orientation)
+                or not np.array_equal(prev_position, m.position)
+                or not np.array_equal(prev_scale, m.scale)
+        ):
             m.model_matrix_update()
-            prev_orientation = pygame.Vector3(*m.orientation)
-            prev_scale = pygame.Vector3(*m.scale)
-            prev_position = pygame.Vector3(*m.position)
+            prev_orientation = np.array(m.orientation)
+            prev_scale = np.array(m.scale)
+            prev_position = np.array(m.position)
 
-        if prev_camera != pygame.Vector3(*camera[:3]):
-            prev_camera = pygame.Vector3(*camera[:3])
+        if not np.array_equal(prev_camera, np.array(camera[:3])):
+            prev_camera = np.array(camera[:3])
             m.projection_matrix_update(prev_camera)
 
-        if prev_frustum != frustum[:6]:
-            prev_frustum = frustum[:6]
+        if not np.array_equal(prev_frustum, np.array(frustum[:6])):
+            prev_frustum = np.array(frustum[:6])
             m.view_matrix_update(prev_frustum)
 
-        m.orientation += pygame.Vector3(0.001, 0.001, 0.001)
-        m.position += pygame.Vector3(0.00, 0.00, -0.001)  # backwards
-        m.scale += pygame.Vector3(-0.001, -0.001, -0.001)  # reverted
+        m.orientation += np.array([0.005, 0.001, 0.001])
+        m.position = np.array(m.position) + np.array([0.00, 0.00, -0.001])  # backwards
+        m.scale += np.array([-0.001, -0.001, -0.001])  # reverted
 
         m.draw(screen, m.model_matrix, m.view_matrix, m.projection_matrix)
         pygame.display.flip()
